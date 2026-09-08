@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { useSectionData, pick } from '@/lib/cms';
 import { refreshScrollTriggerWhenReady } from '@/lib/gsap';
 import { AnimatedHeading } from '@/components/motion/animated-heading';
 import { Reveal, StaggerGroup } from '@/components/motion/reveal';
@@ -17,6 +18,11 @@ const GALLERY = GYM_GALLERY;
 export function FacilitiesExperience() {
   useEffect(() => refreshScrollTriggerWhenReady(), []);
   const t = useTranslations('facilitiesPage');
+  const ar = useLocale() === 'ar';
+  const c = useSectionData('facilities', 'RICH_TEXT');
+  const introKicker = pick(ar ? (c.kickerAr as string) : (c.kickerEn as string), t('intro.kicker'));
+  const introTitle = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('intro.title'));
+  const introBody = pick(ar ? (c.bodyAr as string) : (c.bodyEn as string), t('intro.body'));
   const areas = t.raw('areas.items') as Array<{ title: string; body: string }>;
   const spec = t.raw('spec.items') as Array<{ value: number; suffix?: string; label: string }>;
 
@@ -26,15 +32,15 @@ export function FacilitiesExperience() {
 
       <section className="border-b border-border/70">
         <div className="container pb-24 pt-36">
-          <SectionIndex index={t('intro.index')} label={t('intro.kicker')} />
+          <SectionIndex index={t('intro.index')} label={introKicker} />
           <AnimatedHeading
             as="h1"
-            text={t('intro.title')}
+            text={introTitle}
             className="display-hero mt-6 max-w-[18ch] text-5xl sm:text-6xl"
             onScroll={false}
           />
           <Reveal dir="up" delay={0.1}>
-            <p className="mt-8 max-w-xl text-muted-foreground">{t('intro.body')}</p>
+            <p className="mt-8 max-w-xl text-muted-foreground">{introBody}</p>
           </Reveal>
         </div>
       </section>

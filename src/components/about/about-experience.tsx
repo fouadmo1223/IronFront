@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { useSectionData, pick } from '@/lib/cms';
 import { useGSAP } from '@gsap/react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '@/i18n/routing';
@@ -41,19 +42,24 @@ export function AboutExperience() {
 /* ── 01 · Intro ── */
 function Intro() {
   const t = useTranslations('aboutPage.intro');
+  const ar = useLocale() === 'ar';
+  const c = useSectionData('about', 'RICH_TEXT');
+  const kicker = pick(ar ? (c.kickerAr as string) : (c.kickerEn as string), t('kicker'));
+  const title = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
+  const body = pick(ar ? (c.bodyAr as string) : (c.bodyEn as string), t('body'));
   return (
     <section className="border-b border-border/70">
       <div className="container grid gap-12 pb-24 pt-36 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
         <div>
-          <SectionIndex index={t('index')} label={t('kicker')} />
+          <SectionIndex index={t('index')} label={kicker} />
           <AnimatedHeading
             as="h1"
-            text={t('title')}
+            text={title}
             className="display-hero mt-6 text-5xl sm:text-6xl"
             onScroll={false}
           />
           <Reveal dir="up" delay={0.1}>
-            <p className="mt-8 max-w-xl whitespace-pre-line text-muted-foreground">{t('body')}</p>
+            <p className="mt-8 max-w-xl whitespace-pre-line text-muted-foreground">{body}</p>
           </Reveal>
         </div>
         <Parallax strength={60}>
