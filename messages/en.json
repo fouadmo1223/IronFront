@@ -1,0 +1,603 @@
+{
+  "meta": {
+    "siteName": "IRON GYM",
+    "tagline": "Train heavy. Live strong."
+  },
+  "nav": {
+    "home": "Home",
+    "plans": "Membership",
+    "about": "About",
+    "facilities": "Facilities",
+    "trainers": "Trainers",
+    "contact": "Contact",
+    "login": "Log in",
+    "register": "Join now",
+    "portal": "Member portal"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Est. 2014 — Cairo",
+      "title": "Forge a body that refuses to quit",
+      "subtitle": "A serious training floor, expert coaching and a membership built for people who show up.",
+      "primaryCta": "See membership plans",
+      "secondaryCta": "Take a tour",
+      "scroll": "Scroll"
+    },
+    "marquee": [
+      "Powerlifting",
+      "Olympic lifting",
+      "Conditioning",
+      "Hypertrophy",
+      "Mobility",
+      "Strongman"
+    ],
+    "stats": {
+      "index": "01",
+      "members": "Active members",
+      "trainers": "Certified coaches",
+      "sqm": "Square metres of floor",
+      "hours": "Open hours a week"
+    },
+    "about": {
+      "index": "02",
+      "kicker": "The gym",
+      "title": "No noise. Just the work.",
+      "body": "We opened with one idea — a serious floor without the fluff. No queue for the rack, no chrome for its own sake. Calibrated iron, coaches who compete, and members who keep showing up.\n\nA decade later that hasn't changed.",
+      "signature": "— Est. 2014, Downtown Cairo"
+    },
+    "plansTeaser": {
+      "index": "03",
+      "kicker": "Membership",
+      "title": "One standard. Pick your commitment.",
+      "viewAll": "View all plans"
+    },
+    "why": {
+      "index": "04",
+      "title": "Why Iron Gym",
+      "items": {
+        "equipment": {
+          "title": "Real equipment",
+          "body": "Calibrated plates, competition bars and machines that hold up to heavy use."
+        },
+        "coaching": {
+          "title": "Coaching that matters",
+          "body": "Programming and form checks from coaches who compete and teach."
+        },
+        "community": {
+          "title": "A floor that pushes you",
+          "body": "Train alongside people chasing the same standard you are."
+        },
+        "open": {
+          "title": "Open when you are",
+          "body": "119 staffed hours a week, from before sunrise to late at night."
+        }
+      }
+    },
+    "experience": {
+      "index": "05",
+      "kicker": "How it works",
+      "title": "The training experience",
+      "steps": {
+        "assess": {
+          "title": "Assess",
+          "body": "Body composition scan, movement screen and a conversation about your goal."
+        },
+        "program": {
+          "title": "Program",
+          "body": "A block built for you — strength, conditioning or physique — not a template."
+        },
+        "train": {
+          "title": "Train",
+          "body": "Coaches on the floor for form checks, loading calls and the hard days."
+        },
+        "progress": {
+          "title": "Progress",
+          "body": "Numbers reviewed every month. The plan changes as you do."
+        }
+      }
+    },
+    "trainers": {
+      "index": "06",
+      "kicker": "The team",
+      "title": "Coaches who compete",
+      "people": [
+        {
+          "name": "Omar Khaled",
+          "spec": "Powerlifting"
+        },
+        {
+          "name": "Layla Hassan",
+          "spec": "Strength & conditioning"
+        },
+        {
+          "name": "Yousef Amin",
+          "spec": "Hypertrophy"
+        },
+        {
+          "name": "Mariam Saad",
+          "spec": "Mobility & rehab"
+        }
+      ]
+    },
+    "testimonials": {
+      "index": "07",
+      "kicker": "Members",
+      "items": [
+        {
+          "quote": "First gym where nobody's waiting for a rack and the coaching is actually coaching.",
+          "name": "Karim, 3 years"
+        },
+        {
+          "quote": "Added 40kg to my total in a year. The programming just works.",
+          "name": "Nour, 2 years"
+        },
+        {
+          "quote": "Came back from a knee injury with their rehab track. Training pain-free now.",
+          "name": "Hana, 18 months"
+        }
+      ]
+    },
+    "cta": {
+      "index": "08",
+      "title": "Your first session is on us",
+      "body": "Come in, meet a coach, and put the place through its paces.",
+      "button": "Claim a free pass"
+    },
+    "location": {
+      "index": "14",
+      "kicker": "Find us",
+      "title": "Downtown Cairo",
+      "hoursLabel": "Hours",
+      "weekday": "Mon–Fri",
+      "weekdayHours": "05:00 — 24:00",
+      "weekend": "Sat–Sun",
+      "weekendHours": "07:00 — 22:00",
+      "directions": "Get directions"
+    },
+    "manifesto": {
+      "index": "03",
+      "text": "We are not a lifestyle. We are a training floor. You come in, you do the work, you leave stronger than you arrived."
+    },
+    "numbersBand": {
+      "index": "05",
+      "items": [
+        {
+          "value": 2400000,
+          "prefix": "",
+          "suffix": " kg",
+          "label": "Lifted by members this year"
+        },
+        {
+          "value": 46000,
+          "prefix": "",
+          "suffix": "",
+          "label": "Sessions coached"
+        },
+        {
+          "value": 320,
+          "prefix": "",
+          "suffix": "",
+          "label": "Personal records broken"
+        }
+      ]
+    },
+    "programs": {
+      "index": "07",
+      "kicker": "Train with intent",
+      "title": "Four ways in",
+      "items": [
+        {
+          "title": "Strength",
+          "body": "Squat, bench, deadlift and the accessories that move them. Block periodised."
+        },
+        {
+          "title": "Conditioning",
+          "body": "Engine work that carries over — intervals, carries, sled, erg."
+        },
+        {
+          "title": "Physique",
+          "body": "Structured hypertrophy: volume you can recover from, progressed weekly."
+        },
+        {
+          "title": "Mobility & rehab",
+          "body": "Get access to ranges you don't have, and back from the injuries you do."
+        }
+      ]
+    },
+    "gallery": {
+      "index": "09",
+      "kicker": "Inside the floor",
+      "title": "900 square metres of iron"
+    },
+    "faq": {
+      "index": "13",
+      "kicker": "Before you ask",
+      "title": "Questions",
+      "items": [
+        {
+          "q": "Do I need experience to join?",
+          "a": "No. Every membership starts with an assessment and a coach who builds your first block from where you actually are."
+        },
+        {
+          "q": "Is there a joining fee?",
+          "a": "No joining fee. You pay for the plan you choose — monthly, quarterly, half-year or annual."
+        },
+        {
+          "q": "How does payment work?",
+          "a": "Bank or wallet transfer. You upload the receipt in your member portal and it's approved within a day."
+        },
+        {
+          "q": "Can I freeze my membership?",
+          "a": "Yes — every plan includes freeze days. Request it from the portal and your end date moves out."
+        },
+        {
+          "q": "Do you do personal training?",
+          "a": "Yes. The 3-month plan and up include PT sessions; extra sessions can be booked with any coach."
+        }
+      ]
+    }
+  },
+  "contactPage": {
+    "index": "01",
+    "kicker": "Contact",
+    "title": "Come by, call, or message",
+    "phone": "Call",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "address": "Address",
+    "hours": "Hours",
+    "men": "Men",
+    "women": "Women",
+    "closed": "Closed"
+  },
+  "weekdays": {
+    "sat": "Sat",
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri"
+  },
+  "facilitiesPage": {
+    "intro": {
+      "index": "01",
+      "kicker": "Facilities",
+      "title": "900 square metres of iron",
+      "body": "One flagship floor, laid out for training — not for photos. Every zone is maintained on a weekly schedule and capped to capacity, so you never queue for a lift."
+    },
+    "areas": {
+      "index": "02",
+      "kicker": "Zones",
+      "title": "The floor",
+      "items": [
+        {
+          "title": "Free-weights floor",
+          "body": "Competition bars, calibrated plates, deadlift platforms and a dozen racks."
+        },
+        {
+          "title": "Strength machines",
+          "body": "Plate-loaded and selectorized machines on a weekly maintenance schedule."
+        },
+        {
+          "title": "Conditioning zone",
+          "body": "Assault bikes, rowers, sleds and a turf lane for pushes and carries."
+        },
+        {
+          "title": "Recovery",
+          "body": "Stretching area, foam-rolling station and an InBody composition scanner."
+        },
+        {
+          "title": "Locker rooms",
+          "body": "Full-size lockers, showers and towel service included on every plan."
+        },
+        {
+          "title": "Coaching studio",
+          "body": "Private space for assessments, form checks and 1-on-1 sessions."
+        }
+      ]
+    },
+    "spec": {
+      "index": "03",
+      "kicker": "By the numbers",
+      "items": [
+        {
+          "value": 900,
+          "suffix": " m²",
+          "label": "Training floor"
+        },
+        {
+          "value": 14,
+          "suffix": "",
+          "label": "Racks & platforms"
+        },
+        {
+          "value": 40,
+          "suffix": "+",
+          "label": "Machines"
+        },
+        {
+          "value": 119,
+          "suffix": "",
+          "label": "Staffed hours / week"
+        }
+      ]
+    },
+    "gallery": {
+      "index": "04",
+      "kicker": "Inside",
+      "title": "Come see it"
+    },
+    "cta": {
+      "index": "05",
+      "title": "Train on it before you commit",
+      "body": "Your first session is on us — walk the floor with a coach.",
+      "button": "Claim a free pass"
+    }
+  },
+  "trainersPage": {
+    "intro": {
+      "index": "01",
+      "kicker": "The team",
+      "title": "Coaches who compete",
+      "body": "Eighteen full-time coaches. Every one of them trains, competes, and writes programming — no templates, no clipboards-for-show."
+    },
+    "roster": {
+      "index": "02",
+      "kicker": "Meet them",
+      "title": "The roster",
+      "people": [
+        {
+          "name": "Omar Khaled",
+          "spec": "Powerlifting",
+          "bio": "National-level lifter. Programs strength blocks and meet prep."
+        },
+        {
+          "name": "Layla Hassan",
+          "spec": "Strength & conditioning",
+          "bio": "CSCS. Builds athletic bases for team-sport members."
+        },
+        {
+          "name": "Yousef Amin",
+          "spec": "Hypertrophy",
+          "bio": "Physique coach focused on structured volume and technique."
+        },
+        {
+          "name": "Mariam Saad",
+          "spec": "Mobility & rehab",
+          "bio": "Physio background. Return-to-training and movement work."
+        },
+        {
+          "name": "Tarek Nabil",
+          "spec": "Olympic lifting",
+          "bio": "Snatch and clean & jerk technique, from first pull to overhead."
+        },
+        {
+          "name": "Salma Adel",
+          "spec": "Conditioning",
+          "bio": "Engine work that carries over — intervals, carries, erg, sled."
+        }
+      ]
+    },
+    "method": {
+      "index": "03",
+      "kicker": "How they coach",
+      "title": "Written, not templated",
+      "steps": [
+        {
+          "title": "Assess",
+          "body": "Movement screen, body-composition scan and a conversation about the goal."
+        },
+        {
+          "title": "Write the block",
+          "body": "A periodised plan built for you — reviewed and adjusted every month."
+        },
+        {
+          "title": "On the floor",
+          "body": "Form checks, loading calls, and someone in your corner on the hard days."
+        }
+      ]
+    },
+    "cta": {
+      "index": "04",
+      "title": "Book a session with a coach",
+      "body": "The first one is on us. Come in and get put through your paces.",
+      "button": "Claim a free pass"
+    }
+  },
+  "aboutPage": {
+    "intro": {
+      "index": "01",
+      "kicker": "About",
+      "title": "Built for people who train",
+      "body": "Iron Gym opened in 2014 with one idea: a serious training floor without the noise. No mirrors-only chrome, no queue for the rack — calibrated iron, competent coaching, and members who show up.\n\nA decade later, one flagship floor in downtown Cairo, an eighteen-strong coaching team, and a membership built around the people who keep coming back."
+    },
+    "timeline": {
+      "index": "02",
+      "kicker": "The story",
+      "title": "Ten years, one standard",
+      "items": [
+        {
+          "year": "2014",
+          "title": "The first rack",
+          "body": "A single room, four platforms, and a handful of lifters who wanted somewhere serious."
+        },
+        {
+          "year": "2017",
+          "title": "The floor doubles",
+          "body": "We knocked through the wall next door. 900 sqm, dedicated conditioning zone."
+        },
+        {
+          "year": "2020",
+          "title": "Coaching team formed",
+          "body": "Full-time coaches, structured programming, monthly reviews for every member."
+        },
+        {
+          "year": "2024",
+          "title": "Digital membership",
+          "body": "QR access, portal payments and freeze requests — the floor stayed the same."
+        }
+      ]
+    },
+    "values": {
+      "index": "03",
+      "kicker": "What we hold",
+      "title": "Non-negotiables",
+      "items": [
+        {
+          "title": "The work is the point",
+          "body": "No gimmicks, no theatre. Load the bar, do the reps, review the numbers."
+        },
+        {
+          "title": "Coaching is a craft",
+          "body": "Our coaches compete and teach. Programming is written, not templated."
+        },
+        {
+          "title": "Everyone gets a rack",
+          "body": "We cap membership to floor capacity. You never queue for a lift."
+        },
+        {
+          "title": "Respect the iron",
+          "body": "Maintained weekly, calibrated, and put back. The gym you'd want to train in."
+        }
+      ]
+    },
+    "numbers": {
+      "index": "04",
+      "kicker": "The space",
+      "items": [
+        {
+          "value": 900,
+          "suffix": " m²",
+          "label": "Training floor"
+        },
+        {
+          "value": 14,
+          "suffix": "",
+          "label": "Racks & platforms"
+        },
+        {
+          "value": 18,
+          "suffix": "",
+          "label": "Certified coaches"
+        },
+        {
+          "value": 10,
+          "suffix": " yrs",
+          "label": "On the same block"
+        }
+      ]
+    },
+    "ethos": {
+      "index": "05",
+      "kicker": "How we coach",
+      "quote": "We don't sell transformation. We hand you a plan, load the bar with you, and review the numbers every month. The transformation is a side effect of showing up.",
+      "attribution": "— The coaching team"
+    },
+    "cta": {
+      "index": "06",
+      "title": "Come see the floor",
+      "body": "Walk in, meet a coach, and put the place through its paces. Your first session is on us.",
+      "button": "Claim a free pass"
+    }
+  },
+  "plans": {
+    "title": "Membership plans",
+    "subtitle": "One standard of training. Choose the commitment that fits.",
+    "perMonth": "/ month",
+    "featured": "Most popular",
+    "select": "Choose plan",
+    "durationDays": "{days} days",
+    "visits": "{count} visits",
+    "unlimitedVisits": "Unlimited visits",
+    "freezeDays": "{days} freeze days"
+  },
+  "auth": {
+    "validation": {
+      "emailInvalid": "Enter a valid email address",
+      "passwordRequired": "Enter your password",
+      "nameShort": "Must be at least 2 characters",
+      "phoneShort": "Enter a valid phone number",
+      "passwordWeak": "At least 8 characters, with an uppercase, a lowercase and a number"
+    },
+    "login": {
+      "title": "Welcome back",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "forgot": "Forgot password?",
+      "noAccount": "New here?",
+      "createAccount": "Create an account",
+      "failed": "Invalid email or password"
+    },
+    "register": {
+      "title": "Join Iron Gym",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "password": "Password",
+      "submit": "Create account",
+      "haveAccount": "Already a member?",
+      "toLogin": "Log in",
+      "failed": "Could not create account"
+    }
+  },
+  "portal": {
+    "nav": {
+      "overview": "Overview",
+      "membership": "My membership",
+      "plans": "Plans",
+      "subscribe": "Subscribe / Renew",
+      "qr": "My QR",
+      "payments": "Payments",
+      "attendance": "Attendance",
+      "notifications": "Notifications",
+      "profile": "Profile"
+    },
+    "overview": {
+      "greeting": "Hello, {name}",
+      "memberCode": "Member code",
+      "currentPlan": "Current plan",
+      "status": "Status",
+      "daysRemaining": "Days remaining",
+      "endDate": "Ends on",
+      "lastCheckIn": "Last check-in",
+      "totalVisits": "Total visits",
+      "outstanding": "Outstanding balance",
+      "renew": "Renew membership",
+      "showQr": "Show my QR"
+    }
+  },
+  "subscriptionStatus": {
+    "PENDING_PAYMENT": "Awaiting payment",
+    "PAYMENT_UNDER_REVIEW": "Payment under review",
+    "ACTIVE": "Active",
+    "EXPIRING_SOON": "Expiring soon",
+    "EXPIRED": "Expired",
+    "FROZEN": "Frozen",
+    "CANCELLED": "Cancelled"
+  },
+  "paymentStatus": {
+    "PENDING": "Pending",
+    "UNDER_REVIEW": "Under review",
+    "APPROVED": "Approved",
+    "REJECTED": "Rejected",
+    "FAKE": "Flagged",
+    "CANCELLED": "Cancelled",
+    "REFUND_REQUESTED": "Refund requested",
+    "REFUNDED": "Refunded"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "empty": "Nothing here yet",
+    "language": "Language",
+    "currency": "EGP"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "address": "Tahrir St., Downtown, Cairo"
+  }
+}
