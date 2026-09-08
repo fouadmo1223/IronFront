@@ -130,16 +130,22 @@ function Manifesto() {
 /* ── 03 · About ── */
 function About() {
   const t = useTranslations('home.about');
+  const ar = useLocale() === 'ar';
+  const c = useSectionData('home', 'ABOUT_PREVIEW');
+  const kicker = pick(ar ? (c.kickerAr as string) : (c.kickerEn as string), t('kicker'));
+  const title = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
+  const body = pick(ar ? (c.bodyAr as string) : (c.bodyEn as string), t('body'));
+  const img = pick(c.imageUrl as string, IMG.about);
   return (
     <section className="container grid gap-12 py-24 lg:grid-cols-2 lg:items-center lg:gap-20">
       <Parallax strength={70}>
-        <RevealImage src={IMG.about} alt="" className="aspect-[4/5] rounded-lg border border-border" />
+        <RevealImage src={img} alt="" className="aspect-[4/5] rounded-lg border border-border" />
       </Parallax>
       <div>
-        <SectionIndex index="03" label={t('kicker')} />
-        <AnimatedHeading text={t('title')} className="display-hero mt-6 text-4xl sm:text-5xl" />
+        <SectionIndex index="03" label={kicker} />
+        <AnimatedHeading text={title} className="display-hero mt-6 text-4xl sm:text-5xl" />
         <Reveal dir="up" delay={0.1}>
-          <p className="mt-6 whitespace-pre-line text-muted-foreground">{t('body')}</p>
+          <p className="mt-6 whitespace-pre-line text-muted-foreground">{body}</p>
           <p className="mt-6 text-xs font-semibold uppercase tracking-editorial text-muted-foreground">
             {t('signature')}
           </p>
@@ -180,6 +186,9 @@ function NumbersBand() {
 /* ── 05 · Plans teaser ── */
 function PlansTeaser() {
   const t = useTranslations('home.plansTeaser');
+  const ar = useLocale() === 'ar';
+  const c = useSectionData('home', 'MEMBERSHIP_PLANS');
+  const heading = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const { data: plans = [] } = usePublicPlans();
   const shown = plans.slice(0, 3);
 
@@ -200,7 +209,7 @@ function PlansTeaser() {
           <div>
             <SectionIndex index="05" label={t('kicker')} />
             <AnimatedHeading
-              text={t('title')}
+              text={heading}
               className="display-hero mt-6 max-w-[20ch] text-4xl sm:text-5xl"
             />
           </div>
@@ -256,12 +265,15 @@ function Programs() {
 /* ── 07 · Why Iron Gym ── */
 function WhyUs() {
   const t = useTranslations('home.why');
+  const ar = useLocale() === 'ar';
+  const c = useSectionData('home', 'WHY_US');
+  const heading = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const keys = ['equipment', 'coaching', 'community', 'open'] as const;
 
   return (
     <section className="border-y border-border/70 bg-surface">
       <div className="container py-24">
-        <SectionIndex index="07" label={t('title')} />
+        <SectionIndex index="07" label={heading} />
         <StaggerGroup className="mt-10" amount={0.06} start="top 78%">
           {keys.map((k, i) => (
             <div key={k} className="py-8">
@@ -303,13 +315,17 @@ function GallerySection() {
 /* ── 09 · Training experience — scroll-snap carousel ── */
 function TrainingExperience() {
   const t = useTranslations('home.experience');
+  const ar = useLocale() === 'ar';
+  const c = useSectionData('home', 'TRAINING_EXPERIENCE');
+  const kicker = pick(ar ? (c.kickerAr as string) : (c.kickerEn as string), t('kicker'));
+  const title = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const steps = ['assess', 'program', 'train', 'progress'] as const;
 
   return (
     <section className="overflow-hidden border-b border-border/70 bg-surface py-16">
       <div className="container">
-        <SectionIndex index="09" label={t('kicker')} />
-        <AnimatedHeading text={t('title')} className="display-hero mt-6 text-4xl sm:text-5xl" />
+        <SectionIndex index="09" label={kicker} />
+        <AnimatedHeading text={title} className="display-hero mt-6 text-4xl sm:text-5xl" />
         <StaggerGroup
           className="mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           amount={0.12}
@@ -380,7 +396,15 @@ function Trainers() {
 /* ── 11 · Testimonials ── */
 function Testimonials() {
   const t = useTranslations('home.testimonials');
-  const items = t.raw('items') as Array<{ quote: string; name: string }>;
+  const ar = useLocale() === 'ar';
+  const c = useSectionData('home', 'TESTIMONIALS');
+  const cmsItems = Array.isArray(c.items) ? (c.items as Array<Record<string, string>>) : [];
+  const items: Array<{ quote: string; name: string }> = cmsItems.length
+    ? cmsItems.map((it) => ({
+        quote: ar ? it.quoteAr || it.quoteEn || '' : it.quoteEn || it.quoteAr || '',
+        name: it.nameEn || it.nameAr || '',
+      }))
+    : (t.raw('items') as Array<{ quote: string; name: string }>);
   const [i, setI] = useState(0);
   const quoteRef = useRef<HTMLQuoteElement>(null);
 
@@ -438,12 +462,21 @@ function Testimonials() {
 /* ── 12 · FAQ ── full-bleed ── */
 function Faq() {
   const t = useTranslations('home.faq');
-  const items = t.raw('items') as QA[];
+  const ar = useLocale() === 'ar';
+  const c = useSectionData('home', 'FAQ');
+  const title = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
+  const cmsItems = Array.isArray(c.items) ? (c.items as Array<Record<string, string>>) : [];
+  const items: QA[] = cmsItems.length
+    ? cmsItems.map((it) => ({
+        q: ar ? it.questionAr || it.questionEn || '' : it.questionEn || it.questionAr || '',
+        a: ar ? it.answerAr || it.answerEn || '' : it.answerEn || it.answerAr || '',
+      }))
+    : (t.raw('items') as QA[]);
   return (
     <section className="border-y border-border/70 bg-surface">
       <div className="container py-24">
         <SectionIndex index="12" label={t('kicker')} />
-        <AnimatedHeading text={t('title')} className="display-hero mt-6 text-4xl sm:text-5xl" />
+        <AnimatedHeading text={title} className="display-hero mt-6 text-4xl sm:text-5xl" />
         <div className="mt-10">
           <Accordion items={items} />
         </div>
@@ -488,13 +521,16 @@ function Location() {
   const t = useTranslations('home.location');
   const tc = useTranslations('contactPage');
   const wd = useTranslations('weekdays');
+  const ar = useLocale() === 'ar';
+  const cms = useSectionData('home', 'LOCATION');
+  const title = pick(ar ? (cms.titleAr as string) : (cms.titleEn as string), t('title'));
   const { data: site } = useSiteContent();
   const schedule = resolveSchedule(site?.hours as Record<string, unknown> | undefined);
   return (
     <section className="container grid gap-12 py-24 lg:grid-cols-2 lg:gap-16">
       <div>
         <SectionIndex index="14" label={t('kicker')} />
-        <AnimatedHeading text={t('title')} className="display-hero mt-6 text-4xl sm:text-5xl" />
+        <AnimatedHeading text={title} className="display-hero mt-6 text-4xl sm:text-5xl" />
         <Reveal dir="up" delay={0.1}>
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             {(['men', 'women'] as const).map((audience) => {
