@@ -168,6 +168,16 @@ function PlansTeaser() {
   const { data: plans = [] } = usePublicPlans();
   const shown = plans.slice(0, 3);
 
+  // Plans arrive async; on slower (mobile) connections they land after the
+  // reveal has been set up against an empty grid, leaving the cards hidden.
+  // Recalculate triggers once the data is in.
+  useEffect(() => {
+    if (!shown.length) return;
+    const { ScrollTrigger } = ensureGsap();
+    const id = window.setTimeout(() => ScrollTrigger.refresh(), 60);
+    return () => window.clearTimeout(id);
+  }, [shown.length]);
+
   return (
     <section className="border-b border-border/70 bg-surface">
       <div className="container py-24">
@@ -181,7 +191,11 @@ function PlansTeaser() {
           </div>
           <ArrowLink href="/plans" label={t('viewAll')} />
         </div>
-        <StaggerGroup className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3" amount={0.12}>
+        <StaggerGroup
+          key={shown.length}
+          className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3"
+          amount={0.12}
+        >
           {shown.map((p) => (
             <div
               key={p._id}
