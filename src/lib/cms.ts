@@ -101,6 +101,23 @@ export function useCmsPage(slug: string) {
   });
 }
 
+/**
+ * Content for one section of a CMS page, by section `type`. Returns `{}` while
+ * loading or when the section is absent/disabled — callers fall back to i18n
+ * with `pick(data.foo, fallback)`.
+ */
+export function useSectionData(slug: string, type: string): Record<string, unknown> {
+  const { data } = useCmsPage(slug);
+  const section = data?.sections?.find((s) => s.type === type && s.enabled !== false);
+  return (section?.data as Record<string, unknown>) ?? {};
+}
+
+/** First non-empty string among the candidates. */
+export function pick(...vals: Array<unknown>): string {
+  for (const v of vals) if (typeof v === 'string' && v.trim()) return v;
+  return '';
+}
+
 export const FALLBACK_SITE: SiteContent = {
   brand: { nameEn: 'IRON GYM', nameAr: 'آيرون جيم', accentColor: '#f2591f' },
   contact: {

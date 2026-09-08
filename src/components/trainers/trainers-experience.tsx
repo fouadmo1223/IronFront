@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { refreshScrollTriggerWhenReady } from '@/lib/gsap';
+import { useSectionData } from '@/lib/cms';
 import { AnimatedHeading } from '@/components/motion/animated-heading';
 import { Reveal, StaggerGroup } from '@/components/motion/reveal';
 import { ScrollProgress } from '@/components/motion/scroll-progress';
@@ -13,11 +14,34 @@ import { GYM_IMAGES } from '@/lib/images';
 
 const PORTRAIT = GYM_IMAGES.athleteBack;
 
+interface Person {
+  name: string;
+  spec: string;
+  bio: string;
+  image: string;
+}
+
 export function TrainersExperience() {
   useEffect(() => refreshScrollTriggerWhenReady(), []);
   const t = useTranslations('trainersPage');
-  const people = t.raw('roster.people') as Array<{ name: string; spec: string; bio: string }>;
+  const locale = useLocale();
+  const ar = locale === 'ar';
   const steps = t.raw('method.steps') as Array<{ title: string; body: string }>;
+
+  // Roster: CMS-managed (trainers page → TRAINERS section) with the i18n roster as fallback.
+  const cms = useSectionData('trainers', 'TRAINERS');
+  const cmsItems = Array.isArray(cms.items) ? (cms.items as Array<Record<string, string>>) : [];
+  const people: Person[] = cmsItems.length
+    ? cmsItems.map((it) => ({
+        name: it.nameEn || it.nameAr || '',
+        spec: ar ? it.specAr || it.specEn || '' : it.specEn || it.specAr || '',
+        bio: ar ? it.bioAr || it.bioEn || '' : it.bioEn || it.bioAr || '',
+        image: it.imageUrl || PORTRAIT,
+      }))
+    : (t.raw('roster.people') as Array<{ name: string; spec: string; bio: string }>).map((p) => ({
+        ...p,
+        image: PORTRAIT,
+      }));
 
   return (
     <>
@@ -46,16 +70,16 @@ export function TrainersExperience() {
             className="mt-12 grid gap-4 sm:grid-cols-2 sm:gap-px sm:border sm:border-border sm:bg-border lg:grid-cols-3"
             amount={0.09}
           >
-            {people.map((p) => (
+            {people.map((p, idx) => (
               <figure
-                key={p.name}
+                key={`${p.name}-${idx}`}
                 data-stagger-item
                 className="group relative bg-background transition-shadow duration-300 hover:z-10 hover:shadow-[inset_0_0_0_1px_hsl(var(--accent)/0.6)]"
               >
                 <div className="aspect-[4/5] overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={PORTRAIT}
+                    src={p.image}
                     alt={p.name}
                     loading="lazy"
                     className="h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0"
