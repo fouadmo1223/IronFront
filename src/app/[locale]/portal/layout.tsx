@@ -12,6 +12,7 @@ import {
   CalendarCheck,
   Bell,
   UserRound,
+  LogOut,
 } from 'lucide-react';
 import { usePathname, Link, useRouter } from '@/i18n/routing';
 import { useAuth } from '@/lib/auth';
@@ -37,9 +38,14 @@ const NAV: ReadonlyArray<{
 
 export default function PortalLayout({ children }: { children: ReactNode }) {
   const t = useTranslations('portal.nav');
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
+
+  const signOut = async () => {
+    await logout();
+    router.replace('/login');
+  };
 
   useEffect(() => {
     if (!loading && !user) router.replace('/login');
@@ -117,6 +123,14 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
               </Link>
             );
           })}
+          <button
+            type="button"
+            onClick={signOut}
+            className="group flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-danger/10 hover:text-danger lg:mt-1 lg:border-t lg:border-border/60 lg:pt-3"
+          >
+            <LogOut className="h-4 w-4 shrink-0" />
+            {t('signOut')}
+          </button>
         </nav>
       </aside>
       <div className="min-w-0">{children}</div>

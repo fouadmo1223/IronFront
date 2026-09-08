@@ -7,7 +7,7 @@ import { ArrowRight, Dumbbell, HeartPulse, Sparkles, Waves, Quote } from 'lucide
 import { Link } from '@/i18n/routing';
 import { ensureGsap, prefersReducedMotion, refreshScrollTriggerWhenReady, EASE } from '@/lib/gsap';
 import { usePublicPlans } from '@/lib/portal-api';
-import { useSiteContent, resolveSchedule, formatDayRange } from '@/lib/cms';
+import { useSiteContent, resolveSchedule, formatDayRange, useSectionData, pick } from '@/lib/cms';
 import { Button } from '@/components/ui/button';
 import { AnimatedHeading } from '@/components/motion/animated-heading';
 import { Reveal, StaggerGroup } from '@/components/motion/reveal';
@@ -68,24 +68,39 @@ function DisciplinesMarquee() {
 /* ── 01 · Stats ── */
 function Stats() {
   const t = useTranslations('home.stats');
-  const rows: Array<{ v: number; suffix?: string; k: string }> = [
-    { v: 1200, suffix: '+', k: 'members' },
-    { v: 18, k: 'trainers' },
-    { v: 900, k: 'sqm' },
-    { v: 119, k: 'hours' },
+  const ar = useLocale() === 'ar';
+  const cms = useSectionData('home', 'STATS');
+  const cmsItems = Array.isArray(cms.items) ? (cms.items as Array<Record<string, string>>) : [];
+
+  const fallback: Array<{ value: string; label: string; k: string }> = [
+    { value: '1,200+', label: t('members'), k: 'members' },
+    { value: '18', label: t('trainers'), k: 'trainers' },
+    { value: '900', label: t('sqm'), k: 'sqm' },
+    { value: '119', label: t('hours'), k: 'hours' },
   ];
+  const rows = cmsItems.length
+    ? cmsItems.map((it, i) => ({
+        value: it.valueEn || it.valueAr || '',
+        label: ar ? it.labelAr || it.labelEn || '' : it.labelEn || it.labelAr || '',
+        k: String(i),
+      }))
+    : fallback;
+
   return (
     <section className="border-b border-border/70 bg-surface">
       <div className="container py-14">
         <SectionIndex index="01" />
-        <StaggerGroup className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
+        <StaggerGroup
+          key={rows.length}
+          className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4"
+        >
           {rows.map((r) => (
             <div key={r.k} data-stagger-item>
               <div className="font-display text-5xl font-bold text-accent lg:text-6xl">
-                <CountUp value={r.v} suffix={r.suffix} />
+                {r.value}
               </div>
               <div className="mt-2 text-xs font-semibold uppercase tracking-editorial text-muted-foreground">
-                {t(r.k)}
+                {r.label}
               </div>
             </div>
           ))}
@@ -440,11 +455,14 @@ function Faq() {
 /* ── 13 · CTA band ── */
 function CtaBand() {
   const t = useTranslations('home.cta');
+  const ar = useLocale() === 'ar';
+  const cms = useSectionData('home', 'CTA');
+  const title = pick(ar ? (cms.titleAr as string) : (cms.titleEn as string), t('title'));
   return (
     <section className="bg-accent text-accent-foreground">
       <div className="container flex flex-col items-start gap-8 py-24 lg:flex-row lg:items-center lg:justify-between">
         <AnimatedHeading
-          text={t('title')}
+          text={title}
           className="font-display text-4xl font-bold uppercase leading-[0.95] tracking-tightest sm:text-6xl lg:max-w-[14ch]"
         />
         <div>

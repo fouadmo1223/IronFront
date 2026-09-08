@@ -2,7 +2,7 @@
 
 import { Suspense, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useQueryClient } from '@tanstack/react-query';
 import { CheckCircle2, Upload } from 'lucide-react';
 import { api, apiErrorMessage, unwrap } from '@/lib/api';
@@ -39,6 +39,7 @@ export default function SubscribePage() {
 
 function SubscribeFlow() {
   const locale = useLocale();
+  const t = useTranslations('portal.subscribe');
   const qc = useQueryClient();
   const params = useSearchParams();
   const { data: plans = [] } = usePublicPlans();
@@ -99,12 +100,10 @@ function SubscribeFlow() {
   if (activeSub && step !== 'done') {
     return (
       <div>
-        <h1 className="display-hero text-3xl">Subscribe / Renew</h1>
+        <h1 className="display-hero text-3xl">{t('title')}</h1>
         <Card className="mt-6 p-6">
           <p className="text-sm text-muted-foreground">
-            You have an active <strong className="text-foreground">{name(activeSub)}</strong>{' '}
-            membership until {activeSub.endDate?.slice(0, 10)}. Renewal opens when it is close to
-            expiry.
+            {t('activeMsg', { plan: name(activeSub), date: activeSub.endDate?.slice(0, 10) ?? '' })}
           </p>
         </Card>
       </div>
@@ -130,17 +129,15 @@ function SubscribeFlow() {
     return (
       <div className="py-10 text-center">
         <CheckCircle2 className="mx-auto h-16 w-16 text-success" />
-        <h1 className="display-hero mt-4 text-3xl">Payment submitted</h1>
-        <p className="mt-2 text-muted-foreground">
-          Your payment is now under review. You&apos;ll be notified once it&apos;s approved.
-        </p>
+        <h1 className="display-hero mt-4 text-3xl">{t('doneTitle')}</h1>
+        <p className="mt-2 text-muted-foreground">{t('doneBody')}</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="display-hero text-3xl">Subscribe / Renew</h1>
+      <h1 className="display-hero text-3xl">{t('title')}</h1>
 
       {step === 'plan' && (
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -160,20 +157,20 @@ function SubscribeFlow() {
 
       {step === 'confirm' && selectedPlan && (
         <Card className="mt-6 max-w-lg p-6">
-          <h2 className="font-display text-xl font-bold uppercase">Confirm subscription</h2>
+          <h2 className="font-display text-xl font-bold uppercase">{t('confirmTitle')}</h2>
           <dl className="mt-4 space-y-2 text-sm">
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Plan</dt>
+              <dt className="text-muted-foreground">{t('plan')}</dt>
               <dd className="font-medium">
                 {locale === 'ar' ? selectedPlan.nameAr : selectedPlan.nameEn}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Duration</dt>
-              <dd className="font-medium">{selectedPlan.durationDays} days</dd>
+              <dt className="text-muted-foreground">{t('duration')}</dt>
+              <dd className="font-medium">{t('days', { n: selectedPlan.durationDays })}</dd>
             </div>
             <div className="flex justify-between border-t border-border pt-2">
-              <dt className="text-muted-foreground">Amount due</dt>
+              <dt className="text-muted-foreground">{t('amountDue')}</dt>
               <dd className="font-display text-lg font-bold text-accent">
                 {formatCurrency(selectedPlan.price, locale)}
               </dd>
@@ -186,10 +183,10 @@ function SubscribeFlow() {
           )}
           <div className="mt-5 flex gap-3">
             <Button variant="outline" onClick={() => setStep('plan')}>
-              Back
+              {t('back')}
             </Button>
             <Button onClick={createSubscription} disabled={creating}>
-              {creating ? 'Creating…' : 'Confirm & continue to payment'}
+              {creating ? t('creating') : t('confirm')}
             </Button>
           </div>
         </Card>
@@ -208,6 +205,7 @@ function PaymentStep({
   onDone: () => void;
 }) {
   const locale = useLocale();
+  const t = useTranslations('portal.subscribe');
   const toast = useToast();
   const [methodId, setMethodId] = useState<string>(methods[0]?._id ?? '');
   const [file, setFile] = useState<File | null>(null);
@@ -265,16 +263,16 @@ function PaymentStep({
 
   return (
     <div>
-      <h1 className="display-hero text-3xl">Manual payment</h1>
+      <h1 className="display-hero text-3xl">{t('payTitle')}</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         {locale === 'ar' ? subscription.planNameAr : subscription.planNameEn} ·{' '}
-        <span className="font-semibold text-foreground">{formatCurrency(due, locale)}</span> due
+        <span className="font-semibold text-foreground">{t('payDue', { amount: formatCurrency(due, locale) })}</span>
       </p>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Card className="p-5">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            1 · Transfer to
+            {t('step1')}
           </h2>
           <div className="mt-3 space-y-2">
             {methods.map((m) => (
@@ -297,14 +295,14 @@ function PaymentStep({
           </div>
           {method && (
             <div className="mt-4 rounded-md bg-muted/50 p-3 text-sm">
-              {method.accountName && <p>Name: {method.accountName}</p>}
+              {method.accountName && <p>{t('acctName')}: {method.accountName}</p>}
               {method.phoneNumber && (
-                <p dir="ltr">Number: {method.phoneNumber}</p>
+                <p dir="ltr">{t('acctNumber')}: {method.phoneNumber}</p>
               )}
               {method.accountNumber && (
-                <p dir="ltr">Account: {method.accountNumber}</p>
+                <p dir="ltr">{t('acctAccount')}: {method.accountNumber}</p>
               )}
-              {method.iban && <p dir="ltr">IBAN: {method.iban}</p>}
+              {method.iban && <p dir="ltr">{t('acctIban')}: {method.iban}</p>}
               {(locale === 'ar' ? method.instructionsAr : method.instructionsEn) && (
                 <p className="mt-2 text-xs text-muted-foreground">
                   {locale === 'ar' ? method.instructionsAr : method.instructionsEn}
@@ -316,40 +314,40 @@ function PaymentStep({
 
         <Card className="p-5">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            2 · Enter transfer details
+            {t('step2')}
           </h2>
           <div className="mt-3 space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Sender name">
+              <Field label={t('senderName')}>
                 <Input value={form.senderName} onChange={(e) => set('senderName', e.target.value)} />
               </Field>
-              <Field label="Sender phone">
+              <Field label={t('senderPhone')}>
                 <Input dir="ltr" value={form.senderPhone} onChange={(e) => set('senderPhone', e.target.value)} />
               </Field>
-              <Field label="Amount">
+              <Field label={t('amount')}>
                 <Input type="number" value={form.amount} onChange={(e) => set('amount', e.target.value)} />
               </Field>
-              <Field label="Transfer date">
+              <Field label={t('transferDate')}>
                 <Input type="date" value={form.transferDate} onChange={(e) => set('transferDate', e.target.value)} />
               </Field>
             </div>
-            <Field label="Reference (optional)">
+            <Field label={t('reference')}>
               <Input
                 value={form.transactionReference}
                 onChange={(e) => set('transactionReference', e.target.value)}
               />
             </Field>
-            <Field label="Notes (optional)">
+            <Field label={t('notes')}>
               <Textarea value={form.memberNotes} onChange={(e) => set('memberNotes', e.target.value)} />
             </Field>
-            <Field label="Payment proof">
+            <Field label={t('proof')}>
               <button
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 className="flex h-12 w-full items-center justify-center gap-2 rounded-md border border-dashed border-input text-sm text-muted-foreground hover:border-accent"
               >
                 <Upload className="h-4 w-4" />
-                {file ? file.name : 'Upload screenshot'}
+                {file ? file.name : t('uploadScreenshot')}
               </button>
               <input
                 ref={fileRef}
@@ -365,7 +363,7 @@ function PaymentStep({
               </p>
             )}
             <Button className="w-full" size="lg" onClick={submit} disabled={submitting}>
-              {submitting ? 'Submitting…' : 'Submit payment'}
+              {submitting ? t('submitting') : t('submit')}
             </Button>
           </div>
         </Card>

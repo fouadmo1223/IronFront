@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useQueryClient } from '@tanstack/react-query';
 import { api, apiErrorMessage } from '@/lib/api';
 import { useToast } from '@/components/ui/toast';
@@ -10,6 +11,7 @@ import { Card, Field, Input } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 
 export default function ProfilePage() {
+  const t = useTranslations('portal.profile');
   const { user } = useAuth();
   const qc = useQueryClient();
   const { data: profile } = useMyProfile();
@@ -31,8 +33,8 @@ export default function ProfilePage() {
     try {
       await api.patch('/members/me', form);
       await qc.invalidateQueries({ queryKey: ['portal', 'profile'] });
-      setMsg({ ok: true, text: 'Profile updated' });
-      toast.success('Profile updated');
+      setMsg({ ok: true, text: t('updated') });
+      toast.success(t('updated'));
     } catch (e) {
       const m = apiErrorMessage(e);
       setMsg({ ok: false, text: m });
@@ -44,31 +46,31 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-lg">
-      <h1 className="display-hero text-3xl">Profile</h1>
+      <h1 className="display-hero text-3xl">{t('title')}</h1>
 
       <Card className="mt-6 space-y-4 p-6">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="First name">
+          <Field label={t('firstName')}>
             <Input
               value={form.firstName}
               onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
             />
           </Field>
-          <Field label="Last name">
+          <Field label={t('lastName')}>
             <Input
               value={form.lastName}
               onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
             />
           </Field>
         </div>
-        <Field label="Phone">
+        <Field label={t('phone')}>
           <Input
             dir="ltr"
             value={form.phone}
             onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
           />
         </Field>
-        <Field label="Email">
+        <Field label={t('email')}>
           <Input value={user?.email ?? ''} disabled />
         </Field>
         {msg && (
@@ -83,14 +85,14 @@ export default function ProfilePage() {
           </p>
         )}
         <Button onClick={save} disabled={saving}>
-          {saving ? 'Saving…' : 'Save changes'}
+          {saving ? t('saving') : t('save')}
         </Button>
       </Card>
 
       {(emergency.name || emergency.phone) && (
         <Card className="mt-4 p-6 text-sm">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Emergency contact
+            {t('emergencyContact')}
           </p>
           <p className="mt-2">
             {emergency.name} · <span dir="ltr">{emergency.phone}</span>
