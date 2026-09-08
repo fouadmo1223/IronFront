@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { useMyNotifications } from '@/lib/portal-api';
@@ -11,6 +11,7 @@ import { formatDate } from '@/lib/utils';
 
 export default function PortalNotificationsPage() {
   const locale = useLocale();
+  const t = useTranslations('portal.notifications');
   const qc = useQueryClient();
   const { data = [], isLoading } = useMyNotifications();
 
@@ -22,10 +23,10 @@ export default function PortalNotificationsPage() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h1 className="display-hero text-3xl">Notifications</h1>
+        <h1 className="display-hero text-3xl">{t('title')}</h1>
         {data.some((n) => !n.isRead) && (
           <Button variant="outline" size="sm" onClick={markAll}>
-            Mark all read
+            {t('markAllRead')}
           </Button>
         )}
       </div>
@@ -33,7 +34,7 @@ export default function PortalNotificationsPage() {
       {isLoading ? (
         <ListSkeleton />
       ) : data.length === 0 ? (
-        <Card className="mt-6 p-6 text-center text-muted-foreground">Nothing here yet.</Card>
+        <Card className="mt-6 p-6 text-center text-muted-foreground">{t('empty')}</Card>
       ) : (
         <div className="portal-stagger mt-6 space-y-2">
           {data.map((n) => (

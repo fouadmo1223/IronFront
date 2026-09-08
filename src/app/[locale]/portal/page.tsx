@@ -86,7 +86,7 @@ export default function PortalOverviewPage() {
         </div>
       ) : (
         <Card className="mt-8 flex flex-col items-center gap-4 p-10 text-center">
-          <p className="text-muted-foreground">No active membership.</p>
+          <p className="text-muted-foreground">{t('noMembership')}</p>
           <Link href="/portal/subscribe">
             <Button>{t('renew')}</Button>
           </Link>

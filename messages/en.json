@@ -566,7 +566,51 @@
       "totalVisits": "Total visits",
       "outstanding": "Outstanding balance",
       "renew": "Renew membership",
-      "showQr": "Show my QR"
+      "showQr": "Show my QR",
+      "noMembership": "No active membership."
+    },
+    "membership": {
+      "title": "My membership",
+      "start": "Start",
+      "end": "End",
+      "daysLeft": "Days left",
+      "paid": "Paid",
+      "remaining": "Remaining",
+      "freezeDays": "Freeze days",
+      "visits": "Visits",
+      "history": "History",
+      "noHistory": "No history yet.",
+      "noMembership": "No active membership."
+    },
+    "attendance": {
+      "title": "Attendance",
+      "none": "No visits recorded yet.",
+      "total": "{count} total visits"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "markAllRead": "Mark all read",
+      "empty": "Nothing here yet."
+    },
+    "qr": {
+      "title": "My QR",
+      "hint": "Show this at reception to check in.",
+      "enterCode": "Enter this code at reception",
+      "disabled": "This QR is currently disabled.",
+      "unavailable": "QR is not available on your account."
+    },
+    "payments": {
+      "title": "Payments",
+      "none": "No payments yet.",
+      "rejected": "This payment was rejected",
+      "cancelled": "This payment was cancelled",
+      "reason": "Reason: ",
+      "amountSent": "Amount sent",
+      "amountDue": "Amount due",
+      "method": "Method",
+      "date": "Date",
+      "resubmit": "You can submit a new payment proof from the Subscribe page.",
+      "receipt": "Receipt: "
     }
   },
   "subscriptionStatus": {

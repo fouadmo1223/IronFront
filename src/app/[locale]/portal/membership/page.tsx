@@ -1,6 +1,6 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCurrentSubscription, useSubscriptionHistory } from '@/lib/portal-api';
 import { Card } from '@/components/ui/field';
 import { SubscriptionStatusPill } from '@/components/ui/status-pill';
@@ -9,6 +9,7 @@ import { formatCurrency, formatDate } from '@/lib/utils';
 
 export default function MembershipPage() {
   const locale = useLocale();
+  const t = useTranslations('portal.membership');
   const { data: sub, isLoading } = useCurrentSubscription();
   const { data: history = [] } = useSubscriptionHistory();
   const name = (s: { planNameAr: string; planNameEn: string }) =>
@@ -16,13 +17,13 @@ export default function MembershipPage() {
 
   return (
     <div>
-      <h1 className="display-hero text-3xl">My membership</h1>
+      <h1 className="display-hero text-3xl">{t('title')}</h1>
 
       {isLoading ? (
         <PanelSkeleton />
       ) : sub ? (
         <Card className="mt-6 p-6">
-          <div className="flex items-start justify-between">
+          <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
               <p className="font-display text-2xl font-bold uppercase">{name(sub)}</p>
               <p className="text-sm text-muted-foreground">
@@ -32,29 +33,29 @@ export default function MembershipPage() {
             <SubscriptionStatusPill status={sub.effectiveStatus} />
           </div>
           <dl className="mt-6 grid grid-cols-2 gap-4 text-sm sm:grid-cols-3">
-            <Row label="Start" value={sub.startDate ? formatDate(sub.startDate, locale) : '—'} />
-            <Row label="End" value={sub.endDate ? formatDate(sub.endDate, locale) : '—'} />
-            <Row label="Days left" value={String(Math.max(0, sub.daysRemaining))} />
-            <Row label="Paid" value={formatCurrency(sub.paidAmount, locale)} />
-            <Row label="Remaining" value={formatCurrency(sub.remainingAmount, locale)} />
+            <Row label={t('start')} value={sub.startDate ? formatDate(sub.startDate, locale) : '—'} />
+            <Row label={t('end')} value={sub.endDate ? formatDate(sub.endDate, locale) : '—'} />
+            <Row label={t('daysLeft')} value={String(Math.max(0, sub.daysRemaining))} />
+            <Row label={t('paid')} value={formatCurrency(sub.paidAmount, locale)} />
+            <Row label={t('remaining')} value={formatCurrency(sub.remainingAmount, locale)} />
             <Row
-              label="Freeze days"
+              label={t('freezeDays')}
               value={`${sub.freezeDaysUsed} / ${sub.planFreezeDays}`}
             />
             <Row
-              label="Visits"
+              label={t('visits')}
               value={sub.allowedVisits ? `${sub.visitsUsed} / ${sub.allowedVisits}` : String(sub.visitsUsed)}
             />
           </dl>
         </Card>
       ) : (
-        <Card className="mt-6 p-6 text-center text-muted-foreground">No active membership.</Card>
+        <Card className="mt-6 p-6 text-center text-muted-foreground">{t('noMembership')}</Card>
       )}
 
-      <h2 className="mt-10 font-display text-xl font-bold uppercase">History</h2>
+      <h2 className="mt-10 font-display text-xl font-bold uppercase">{t('history')}</h2>
       <div className="portal-stagger mt-4 space-y-2">
         {history.map((s) => (
-          <Card key={s._id} className="flex items-center justify-between p-4">
+          <Card key={s._id} className="flex flex-wrap items-center justify-between gap-2 p-4">
             <div>
               <p className="font-medium">{name(s)}</p>
               <p className="text-xs text-muted-foreground">
@@ -71,7 +72,7 @@ export default function MembershipPage() {
           </Card>
         ))}
         {history.length === 0 && (
-          <p className="text-sm text-muted-foreground">No history yet.</p>
+          <p className="text-sm text-muted-foreground">{t('noHistory')}</p>
         )}
       </div>
     </div>
