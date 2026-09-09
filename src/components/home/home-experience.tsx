@@ -7,7 +7,14 @@ import { ArrowRight, Dumbbell, HeartPulse, Sparkles, Waves, Quote } from 'lucide
 import { Link } from '@/i18n/routing';
 import { ensureGsap, prefersReducedMotion, refreshScrollTriggerWhenReady, EASE } from '@/lib/gsap';
 import { usePublicPlans } from '@/lib/portal-api';
-import { useSiteContent, resolveSchedule, formatDayRange, useSectionData, pick } from '@/lib/cms';
+import {
+  useSiteContent,
+  resolveSchedule,
+  formatDayRange,
+  useSectionData,
+  useSectionEnabled,
+  pick,
+} from '@/lib/cms';
 import { Button } from '@/components/ui/button';
 import { AnimatedHeading } from '@/components/motion/animated-heading';
 import { Reveal, StaggerGroup } from '@/components/motion/reveal';
@@ -69,6 +76,7 @@ function DisciplinesMarquee() {
 function Stats() {
   const t = useTranslations('home.stats');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'STATS');
   const cms = useSectionData('home', 'STATS');
   const cmsItems = Array.isArray(cms.items) ? (cms.items as Array<Record<string, string>>) : [];
 
@@ -86,14 +94,13 @@ function Stats() {
       }))
     : fallback;
 
+  if (!enabled) return null;
+
   return (
     <section className="border-b border-border/70 bg-surface">
       <div className="container py-14">
         <SectionIndex index="01" />
-        <StaggerGroup
-          key={rows.length}
-          className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4"
-        >
+        <StaggerGroup className="mt-8 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
           {rows.map((r) => (
             <div key={r.k} data-stagger-item>
               <div className="font-display text-5xl font-bold text-accent lg:text-6xl">
@@ -131,11 +138,13 @@ function Manifesto() {
 function About() {
   const t = useTranslations('home.about');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'ABOUT_PREVIEW');
   const c = useSectionData('home', 'ABOUT_PREVIEW');
   const kicker = pick(ar ? (c.kickerAr as string) : (c.kickerEn as string), t('kicker'));
   const title = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const body = pick(ar ? (c.bodyAr as string) : (c.bodyEn as string), t('body'));
   const img = pick(c.imageUrl as string, IMG.about);
+  if (!enabled) return null;
   return (
     <section className="container grid gap-12 py-24 lg:grid-cols-2 lg:items-center lg:gap-20">
       <Parallax strength={70}>
@@ -187,6 +196,7 @@ function NumbersBand() {
 function PlansTeaser() {
   const t = useTranslations('home.plansTeaser');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'MEMBERSHIP_PLANS');
   const c = useSectionData('home', 'MEMBERSHIP_PLANS');
   const heading = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const { data: plans = [] } = usePublicPlans();
@@ -202,6 +212,8 @@ function PlansTeaser() {
     return () => window.clearTimeout(id);
   }, [shown.length]);
 
+  if (!enabled) return null;
+
   return (
     <section className="border-b border-border/70 bg-surface">
       <div className="container py-24">
@@ -215,11 +227,7 @@ function PlansTeaser() {
           </div>
           <ArrowLink href="/plans" label={t('viewAll')} />
         </div>
-        <StaggerGroup
-          key={shown.length}
-          className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3"
-          amount={0.12}
-        >
+        <StaggerGroup className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3" amount={0.12}>
           {shown.map((p) => (
             <div
               key={p._id}
@@ -266,9 +274,12 @@ function Programs() {
 function WhyUs() {
   const t = useTranslations('home.why');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'WHY_US');
   const c = useSectionData('home', 'WHY_US');
   const heading = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const keys = ['equipment', 'coaching', 'community', 'open'] as const;
+
+  if (!enabled) return null;
 
   return (
     <section className="border-y border-border/70 bg-surface">
@@ -316,10 +327,13 @@ function GallerySection() {
 function TrainingExperience() {
   const t = useTranslations('home.experience');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'TRAINING_EXPERIENCE');
   const c = useSectionData('home', 'TRAINING_EXPERIENCE');
   const kicker = pick(ar ? (c.kickerAr as string) : (c.kickerEn as string), t('kicker'));
   const title = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const steps = ['assess', 'program', 'train', 'progress'] as const;
+
+  if (!enabled) return null;
 
   return (
     <section className="overflow-hidden border-b border-border/70 bg-surface py-16">
@@ -357,7 +371,9 @@ function TrainingExperience() {
 /* ── 10 · Trainers ── */
 function Trainers() {
   const t = useTranslations('home.trainers');
+  const enabled = useSectionEnabled('home', 'TRAINERS');
   const people = t.raw('people') as Array<{ name: string; spec: string }>;
+  if (!enabled) return null;
   return (
     <section className="container py-24">
       <SectionIndex index="10" label={t('kicker')} />
@@ -397,6 +413,7 @@ function Trainers() {
 function Testimonials() {
   const t = useTranslations('home.testimonials');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'TESTIMONIALS');
   const c = useSectionData('home', 'TESTIMONIALS');
   const cmsItems = Array.isArray(c.items) ? (c.items as Array<Record<string, string>>) : [];
   const items: Array<{ quote: string; name: string }> = cmsItems.length
@@ -426,6 +443,8 @@ function Testimonials() {
     },
     { dependencies: [i] },
   );
+
+  if (!enabled) return null;
 
   return (
     <section className="border-y border-border/70 bg-surface">
@@ -463,6 +482,7 @@ function Testimonials() {
 function Faq() {
   const t = useTranslations('home.faq');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'FAQ');
   const c = useSectionData('home', 'FAQ');
   const title = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const cmsItems = Array.isArray(c.items) ? (c.items as Array<Record<string, string>>) : [];
@@ -472,6 +492,7 @@ function Faq() {
         a: ar ? it.answerAr || it.answerEn || '' : it.answerEn || it.answerAr || '',
       }))
     : (t.raw('items') as QA[]);
+  if (!enabled) return null;
   return (
     <section className="border-y border-border/70 bg-surface">
       <div className="container py-24">
@@ -489,8 +510,10 @@ function Faq() {
 function CtaBand() {
   const t = useTranslations('home.cta');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'CTA');
   const cms = useSectionData('home', 'CTA');
   const title = pick(ar ? (cms.titleAr as string) : (cms.titleEn as string), t('title'));
+  if (!enabled) return null;
   return (
     <section className="bg-accent text-accent-foreground">
       <div className="container flex flex-col items-start gap-8 py-24 lg:flex-row lg:items-center lg:justify-between">
@@ -522,10 +545,12 @@ function Location() {
   const tc = useTranslations('contactPage');
   const wd = useTranslations('weekdays');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'LOCATION');
   const cms = useSectionData('home', 'LOCATION');
   const title = pick(ar ? (cms.titleAr as string) : (cms.titleEn as string), t('title'));
   const { data: site } = useSiteContent();
   const schedule = resolveSchedule(site?.hours as Record<string, unknown> | undefined);
+  if (!enabled) return null;
   return (
     <section className="container grid gap-12 py-24 lg:grid-cols-2 lg:gap-16">
       <div>

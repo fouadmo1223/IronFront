@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { ensureGsap, prefersReducedMotion, EASE, isRTL } from '@/lib/gsap';
-import { useSectionData, pick } from '@/lib/cms';
+import { useSectionData, useSectionEnabled, pick } from '@/lib/cms';
 import { Button } from '@/components/ui/button';
 import { AnimatedHeading } from '@/components/motion/animated-heading';
 import { Magnetic } from '@/components/motion/magnetic';
@@ -13,6 +13,7 @@ import { Magnetic } from '@/components/motion/magnetic';
 export function Hero() {
   const t = useTranslations('home.hero');
   const ar = useLocale() === 'ar';
+  const enabled = useSectionEnabled('home', 'HERO');
   const cms = useSectionData('home', 'HERO');
   const title = pick(ar ? (cms.titleAr as string) : (cms.titleEn as string), t('title'));
   const subtitle = pick(
@@ -94,6 +95,8 @@ export function Hero() {
     },
     { scope },
   );
+
+  if (!enabled) return null;
 
   return (
     <section

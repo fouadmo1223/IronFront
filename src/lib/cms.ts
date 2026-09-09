@@ -112,6 +112,17 @@ export function useSectionData(slug: string, type: string): Record<string, unkno
   return (section?.data as Record<string, unknown>) ?? {};
 }
 
+/**
+ * Whether a section type should render. A section is hidden only when it exists
+ * in the CMS page and is explicitly disabled; sections not configured in the CMS
+ * (and the whole page while loading) default to visible.
+ */
+export function useSectionEnabled(slug: string, type: string): boolean {
+  const { data } = useCmsPage(slug);
+  const section = data?.sections?.find((s) => s.type === type);
+  return section ? section.enabled !== false : true;
+}
+
 /** First non-empty string among the candidates. */
 export function pick(...vals: Array<unknown>): string {
   for (const v of vals) if (typeof v === 'string' && v.trim()) return v;
