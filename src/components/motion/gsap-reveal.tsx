@@ -1,9 +1,17 @@
 'use client';
 
-import { Children, useRef, type ReactNode } from 'react';
+import {
+  Children,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type ReactNode,
+} from 'react';
 import { useGSAP } from '@gsap/react';
 import { ensureGsap, prefersReducedMotion, armRevealFailsafe, EASE, DUR, START } from '@/lib/gsap';
 import { cn } from '@/lib/utils';
+
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 type Dir = 'up' | 'down' | 'left' | 'right' | 'none';
 
@@ -110,40 +118,49 @@ export function StaggerGroup({
   start?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  // Re-run the reveal when the child count changes (async data landing) instead
-  // of forcing a remount via `key` from the caller — a remount reverts the
-  // useGSAP context and can strip the reveal, leaving items stuck hidden.
-  const count = Children.toArray(children).length;
+  // Re-init signal: the child keys joined. When async data swaps OR re-keys the
+  // items after mount (same count, new DOM nodes — e.g. Stats going from i18n
+  // fallback to CMS rows), this changes and the effect re-hides + re-arms the
+  // fresh nodes. A plain effect (not useGSAP) is used deliberately — useGSAP's
+  // context revert was leaving those new nodes without `gsap.set`, stuck at the
+  // CSS `opacity: 0`.
+  const sig = Children.toArray(children)
+    .map((c) => (typeof c === 'object' && c !== null && 'key' in c ? String(c.key) : ''))
+    .join('|');
 
-  useGSAP(
-    () => {
-      const { gsap } = ensureGsap();
-      const root = ref.current;
-      if (!root) return;
-      const marked = root.querySelectorAll('[data-stagger-item]');
-      const items = marked.length ? marked : (root.children as unknown as NodeListOf<Element>);
-      if (!items.length) return;
+  useIsoLayoutEffect(() => {
+    const { gsap } = ensureGsap();
+    const root = ref.current;
+    if (!root) return;
+    const marked = root.querySelectorAll('[data-stagger-item]');
+    const items = marked.length ? marked : (root.children as unknown as NodeListOf<Element>);
+    if (!items.length) return;
 
-      if (prefersReducedMotion()) {
-        gsap.set(items, { autoAlpha: 1, clearProps: 'transform' });
-        return;
-      }
+    if (prefersReducedMotion()) {
+      gsap.set(items, { autoAlpha: 1, clearProps: 'transform' });
+      return;
+    }
 
-      gsap.set(items, { ...OFFSET[dir](distance), autoAlpha: 0 });
-      gsap.to(items, {
-        x: 0,
-        y: 0,
-        autoAlpha: 1,
-        duration: DUR.base,
-        ease: EASE.out,
-        stagger: amount,
-        scrollTrigger: { trigger: root, start, once: true },
-      });
+    gsap.set(items, { ...OFFSET[dir](distance), autoAlpha: 0 });
+    const tween = gsap.to(items, {
+      x: 0,
+      y: 0,
+      autoAlpha: 1,
+      duration: DUR.base,
+      ease: EASE.out,
+      stagger: amount,
+      scrollTrigger: { trigger: root, start, once: true },
+    });
 
-      return armRevealFailsafe(items);
-    },
-    { scope: ref, dependencies: [amount, dir, distance, start, count] },
-  );
+    const disarm = armRevealFailsafe(items);
+
+    return () => {
+      disarm();
+      tween.scrollTrigger?.kill();
+      tween.kill();
+      gsap.set(items, { clearProps: 'opacity,visibility,transform' });
+    };
+  }, [amount, dir, distance, start, sig]);
 
   return (
     <div ref={ref} data-animate-group className={className}>

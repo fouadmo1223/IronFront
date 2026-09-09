@@ -81,15 +81,18 @@ export function armRevealFailsafe(
     const cs = getComputedStyle(el);
     if (cs.opacity !== '0' && cs.visibility !== 'hidden') return;
     done.add(el);
-    gsap.to(el, {
-      autoAlpha: 1,
-      x: 0,
-      y: 0,
-      filter: 'blur(0px)',
-      clipPath: 'inset(0 0 0 0)',
-      duration: 0.5,
+    // Make it visible synchronously — this survives a throttled/dead rAF ticker
+    // (hidden tab, low-power) where a tween would never advance.
+    gsap.set(el, { autoAlpha: 1, x: 0, y: 0, clearProps: 'transform,filter,clipPath' });
+    // Cosmetic entrance only if the ticker is actually running. immediateRender:
+    // false means a stalled ticker never re-applies the from-state, so the
+    // element cannot get stuck hidden again.
+    gsap.from(el, {
+      autoAlpha: 0,
+      y: 16,
+      duration: 0.45,
       ease: 'power2.out',
-      clearProps: 'transform,filter,clipPath',
+      immediateRender: false,
     });
   };
 

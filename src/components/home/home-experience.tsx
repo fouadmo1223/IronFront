@@ -80,19 +80,22 @@ function Stats() {
   const cms = useSectionData('home', 'STATS');
   const cmsItems = Array.isArray(cms.items) ? (cms.items as Array<Record<string, string>>) : [];
 
-  const fallback: Array<{ value: string; label: string; k: string }> = [
-    { value: '1,200+', label: t('members'), k: 'members' },
-    { value: '18', label: t('trainers'), k: 'trainers' },
-    { value: '900', label: t('sqm'), k: 'sqm' },
-    { value: '119', label: t('hours'), k: 'hours' },
+  const fallback: Array<{ value: string; label: string }> = [
+    { value: '1,200+', label: t('members') },
+    { value: '18', label: t('trainers') },
+    { value: '900', label: t('sqm') },
+    { value: '119', label: t('hours') },
   ];
-  const rows = cmsItems.length
-    ? cmsItems.map((it, i) => ({
-        value: it.valueEn || it.valueAr || '',
-        label: ar ? it.labelAr || it.labelEn || '' : it.labelEn || it.labelAr || '',
-        k: String(i),
-      }))
-    : fallback;
+  // Index-based keys so the fallback → CMS swap reuses the same DOM nodes
+  // rather than unmounting/remounting them.
+  const rows = (
+    cmsItems.length
+      ? cmsItems.map((it) => ({
+          value: it.valueEn || it.valueAr || '',
+          label: ar ? it.labelAr || it.labelEn || '' : it.labelEn || it.labelAr || '',
+        }))
+      : fallback
+  ).map((r, k) => ({ ...r, k: String(k) }));
 
   if (!enabled) return null;
 
