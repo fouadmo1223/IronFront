@@ -181,7 +181,7 @@ function SubscribeFlow() {
               {error}
             </p>
           )}
-          <div className="mt-5 flex gap-3">
+          <div className="mt-5 flex flex-wrap gap-3">
             <Button variant="outline" onClick={() => setStep('plan')}>
               {t('back')}
             </Button>

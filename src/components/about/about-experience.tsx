@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useSectionData, pick } from '@/lib/cms';
+import { useCmsReady, useSectionData, pick } from '@/lib/cms';
 import { useGSAP } from '@gsap/react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '@/i18n/routing';
@@ -43,10 +43,27 @@ export function AboutExperience() {
 function Intro() {
   const t = useTranslations('aboutPage.intro');
   const ar = useLocale() === 'ar';
+  const ready = useCmsReady('about');
   const c = useSectionData('about', 'RICH_TEXT');
   const kicker = pick(ar ? (c.kickerAr as string) : (c.kickerEn as string), t('kicker'));
   const title = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('title'));
   const body = pick(ar ? (c.bodyAr as string) : (c.bodyEn as string), t('body'));
+
+  // Hold the section back until the CMS request settles, so the editor's copy
+  // is what renders first — no flash of the i18n fallback then a swap.
+  if (!ready) {
+    return (
+      <section className="border-b border-border/70">
+        <div className="container pb-24 pt-36">
+          <div className="h-3 w-24 animate-pulse rounded bg-muted" />
+          <div className="mt-8 h-12 w-3/4 max-w-xl animate-pulse rounded bg-muted" />
+          <div className="mt-8 h-4 w-full max-w-xl animate-pulse rounded bg-muted" />
+          <div className="mt-2 h-4 w-2/3 max-w-xl animate-pulse rounded bg-muted" />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="border-b border-border/70">
       <div className="container grid gap-12 pb-24 pt-36 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">

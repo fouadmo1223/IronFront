@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useSectionData, pick } from '@/lib/cms';
+import { useCmsReady, useSectionData, pick } from '@/lib/cms';
 import { refreshScrollTriggerWhenReady } from '@/lib/gsap';
 import { AnimatedHeading } from '@/components/motion/animated-heading';
 import { Reveal, StaggerGroup } from '@/components/motion/reveal';
@@ -19,6 +19,7 @@ export function FacilitiesExperience() {
   useEffect(() => refreshScrollTriggerWhenReady(), []);
   const t = useTranslations('facilitiesPage');
   const ar = useLocale() === 'ar';
+  const ready = useCmsReady('facilities');
   const c = useSectionData('facilities', 'RICH_TEXT');
   const introKicker = pick(ar ? (c.kickerAr as string) : (c.kickerEn as string), t('intro.kicker'));
   const introTitle = pick(ar ? (c.titleAr as string) : (c.titleEn as string), t('intro.title'));
@@ -32,16 +33,27 @@ export function FacilitiesExperience() {
 
       <section className="border-b border-border/70">
         <div className="container pb-24 pt-36">
-          <SectionIndex index={t('intro.index')} label={introKicker} />
-          <AnimatedHeading
-            as="h1"
-            text={introTitle}
-            className="display-hero mt-6 max-w-[18ch] text-5xl sm:text-6xl"
-            onScroll={false}
-          />
-          <Reveal dir="up" delay={0.1}>
-            <p className="mt-8 max-w-xl text-muted-foreground">{introBody}</p>
-          </Reveal>
+          {ready ? (
+            <>
+              <SectionIndex index={t('intro.index')} label={introKicker} />
+              <AnimatedHeading
+                as="h1"
+                text={introTitle}
+                className="display-hero mt-6 max-w-[18ch] text-5xl sm:text-6xl"
+                onScroll={false}
+              />
+              <Reveal dir="up" delay={0.1}>
+                <p className="mt-8 max-w-xl text-muted-foreground">{introBody}</p>
+              </Reveal>
+            </>
+          ) : (
+            <>
+              <div className="h-3 w-24 animate-pulse rounded bg-muted" />
+              <div className="mt-6 h-12 w-3/4 max-w-lg animate-pulse rounded bg-muted" />
+              <div className="mt-8 h-4 w-full max-w-xl animate-pulse rounded bg-muted" />
+              <div className="mt-2 h-4 w-2/3 max-w-xl animate-pulse rounded bg-muted" />
+            </>
+          )}
         </div>
       </section>
 

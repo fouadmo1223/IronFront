@@ -117,6 +117,15 @@ export function useSectionData(slug: string, type: string): Record<string, unkno
  * in the CMS page and is explicitly disabled; sections not configured in the CMS
  * (and the whole page while loading) default to visible.
  */
+/**
+ * True once the CMS page request has settled (success or error). Use it to hold
+ * back CMS-driven copy until the real data is in, instead of flashing the i18n
+ * fallback and then swapping.
+ */
+export function useCmsReady(slug: string): boolean {
+  return !useCmsPage(slug).isLoading;
+}
+
 export function useSectionEnabled(slug: string, type: string): boolean {
   const { data } = useCmsPage(slug);
   const matches = data?.sections?.filter((s) => s.type === type) ?? [];
