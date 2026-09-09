@@ -140,7 +140,7 @@ export default function ContactPage() {
         </StaggerGroup>
       </div>
 
-      <div className="mt-16 max-w-2xl">
+      <div className="mx-auto mt-20 w-full max-w-3xl">
         <ContactForm />
       </div>
     </div>
@@ -180,61 +180,63 @@ function ContactForm() {
 
   if (sent) {
     return (
-      <Card className="flex items-center gap-3 p-5 text-sm">
-        <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
-        <span>{t('success')}</span>
+      <Card className="flex items-center gap-4 p-8 sm:p-10">
+        <CheckCircle2 className="h-8 w-8 shrink-0 text-accent" />
+        <div>
+          <p className="font-display text-xl font-semibold">{t('heading')}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{t('success')}</p>
+        </div>
       </Card>
     );
   }
 
   const field =
-    'h-11 w-full rounded-md border border-border bg-surface px-3 text-sm outline-none transition-colors focus:border-accent';
+    'h-12 w-full rounded-lg border border-border bg-background/60 px-4 text-sm outline-none transition-colors focus:border-accent';
+  const labelText =
+    'mb-1.5 block text-xs font-semibold uppercase tracking-editorial text-muted-foreground';
 
   return (
-    <Card className="p-5 sm:p-6">
-      <h2 className="text-lg font-semibold">{t('heading')}</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-4 grid gap-3 sm:grid-cols-2">
+    <Card className="overflow-hidden p-0">
+      <div className="border-b border-border/60 bg-surface px-6 py-5 sm:px-8">
+        <h2 className="font-display text-2xl font-semibold">{t('heading')}</h2>
+      </div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid gap-4 px-6 py-6 sm:grid-cols-2 sm:px-8 sm:py-8"
+      >
         <label className="block">
-          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {t('name')}
-          </span>
+          <span className={labelText}>{t('name')}</span>
           <input className={field} {...register('name')} />
           {errors.name && <span className="mt-1 block text-xs text-danger">{errors.name.message}</span>}
         </label>
         <label className="block">
-          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {t('email')}
-          </span>
+          <span className={labelText}>{t('email')}</span>
           <input className={field} dir="ltr" type="email" {...register('email')} />
           {errors.email && (
             <span className="mt-1 block text-xs text-danger">{errors.email.message}</span>
           )}
         </label>
         <label className="block sm:col-span-2">
-          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {t('phone')}
-          </span>
+          <span className={labelText}>{t('phone')}</span>
           <input className={field} dir="ltr" {...register('phone')} />
           {errors.phone && (
             <span className="mt-1 block text-xs text-danger">{errors.phone.message}</span>
           )}
         </label>
         <label className="block sm:col-span-2">
-          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            {t('message')}
-          </span>
+          <span className={labelText}>{t('message')}</span>
           <textarea
-            rows={5}
-            className="w-full resize-y rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none transition-colors focus:border-accent"
+            rows={6}
+            className="w-full resize-y rounded-lg border border-border bg-background/60 px-4 py-3 text-sm outline-none transition-colors focus:border-accent"
             {...register('message')}
           />
           {errors.message && (
             <span className="mt-1 block text-xs text-danger">{errors.message.message}</span>
           )}
         </label>
-        <div className="sm:col-span-2">
-          <Button type="submit" disabled={isSubmitting}>
-            <Send className="me-2 h-4 w-4" />
+        <div className="sm:col-span-2 sm:flex sm:justify-end">
+          <Button type="submit" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
+            <Send className="me-2 h-4 w-4 rtl:rotate-180" />
             {isSubmitting ? t('sending') : t('send')}
           </Button>
         </div>
