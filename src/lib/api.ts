@@ -89,3 +89,26 @@ export function apiErrorMessage(error: unknown, fallback = 'Something went wrong
   }
   return fallback;
 }
+
+/**
+ * Maps a known (English) backend error message to a bare key under the
+ * `apiErrors` i18n namespace, so callers can localise it. Returns null for
+ * anything unrecognised — the caller then falls back to the raw message.
+ */
+const API_ERROR_PATTERNS: Array<[RegExp, string]> = [
+  [/account with this email already exists/i, 'emailExists'],
+  [/invalid email or password/i, 'invalidCredentials'],
+  [/account is disabled/i, 'accountDisabled'],
+  [/account not found/i, 'accountNotFound'],
+  [/(phone).*(already|exists|taken)|duplicate value for .*phone/i, 'phoneExists'],
+  [/could not allocate a unique member code|member profile creation failed/i, 'registrationFailed'],
+  [/validation failed/i, 'validation'],
+  [/too many requests|rate limit/i, 'rateLimited'],
+];
+
+export function apiErrorKey(error: unknown): string | null {
+  if (!axios.isAxiosError(error)) return null;
+  const msg = (error.response?.data as { message?: string } | undefined)?.message ?? '';
+  for (const [re, key] of API_ERROR_PATTERNS) if (re.test(msg)) return key;
+  return null;
+}

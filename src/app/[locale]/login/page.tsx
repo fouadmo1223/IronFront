@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, useRouter } from '@/i18n/routing';
 import { useAuth } from '@/lib/auth';
-import { apiErrorMessage } from '@/lib/api';
+import { apiErrorMessage, apiErrorKey } from '@/lib/api';
 import { useToast } from '@/components/ui/toast';
 import { Button } from '@/components/ui/button';
 import { Input, Field, Card } from '@/components/ui/field';
@@ -17,6 +17,7 @@ type Values = { email: string; password: string };
 export default function LoginPage() {
   const t = useTranslations('auth.login');
   const tv = useTranslations('auth.validation');
+  const te = useTranslations('apiErrors');
   const { login } = useAuth();
   const router = useRouter();
   const toast = useToast();
@@ -39,7 +40,8 @@ export default function LoginPage() {
       await login(v.email, v.password);
       router.push('/portal');
     } catch (e) {
-      const m = apiErrorMessage(e, t('failed'));
+      const key = apiErrorKey(e);
+      const m = key ? te(key) : apiErrorMessage(e, t('failed'));
       setError(m);
       toast.error(m);
     }

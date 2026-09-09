@@ -58,7 +58,8 @@ export function SiteHeader() {
       ref={headerRef}
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-[transform,background-color,border-color,backdrop-filter] duration-300 will-change-transform',
-        hidden ? '-translate-y-full' : 'translate-y-0',
+        // Hide-on-scroll only from md up; on mobile the header stays pinned.
+        hidden ? 'translate-y-0 md:-translate-y-full' : 'translate-y-0',
         scrolled
           ? 'border-b border-border/70 bg-background/80 backdrop-blur-xl'
           : 'border-b border-transparent bg-transparent',
