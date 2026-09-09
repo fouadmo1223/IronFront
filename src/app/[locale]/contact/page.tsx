@@ -1,12 +1,19 @@
 'use client';
 
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useLocale, useTranslations } from 'next-intl';
-import { Phone, Mail, MapPin, MessageCircle, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, MessageCircle, Clock, Send, CheckCircle2 } from 'lucide-react';
 import { useSiteContent, resolveSchedule, formatDayRange } from '@/lib/cms';
+import { api, apiErrorMessage } from '@/lib/api';
 import { Card } from '@/components/ui/field';
+import { Button } from '@/components/ui/button';
 import { AnimatedHeading } from '@/components/motion/animated-heading';
 import { StaggerGroup } from '@/components/motion/reveal';
 import { SectionIndex } from '@/components/home/section-index';
+import { useToast } from '@/components/ui/toast';
 
 type Row = { icon: typeof Phone; label: string; value: string; href?: string };
 
@@ -18,6 +25,7 @@ export default function ContactPage() {
   const { data: site } = useSiteContent();
   const c = (site?.contact ?? {}) as Record<string, unknown>;
   const schedule = resolveSchedule(site?.hours as Record<string, unknown> | undefined);
+  const mapUrl = typeof c.mapUrl === 'string' && c.mapUrl.trim() ? c.mapUrl.trim() : '';
 
   const phones = (
     Array.isArray(c.phones) ? (c.phones as string[]) : c.phone ? [String(c.phone)] : []
@@ -116,19 +124,121 @@ export default function ContactPage() {
               })}
             </div>
           </Card>
-          <a
-            data-stagger-item
-            href="https://maps.google.com/?q=Downtown+Cairo"
-            target="_blank"
-            rel="noreferrer"
-            className="block"
-          >
-            <Card className="card-hover flex h-40 items-center justify-center bg-[repeating-linear-gradient(45deg,hsl(var(--muted))_0_10px,transparent_10px_20px)] text-xs font-semibold uppercase tracking-editorial text-muted-foreground">
-              {th('directions')}
-            </Card>
-          </a>
+          {mapUrl && (
+            <a
+              data-stagger-item
+              href={mapUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="block"
+            >
+              <Card className="card-hover flex h-40 items-center justify-center bg-[repeating-linear-gradient(45deg,hsl(var(--muted))_0_10px,transparent_10px_20px)] text-xs font-semibold uppercase tracking-editorial text-muted-foreground">
+                {th('directions')}
+              </Card>
+            </a>
+          )}
         </StaggerGroup>
       </div>
+
+      <div className="mt-16 max-w-2xl">
+        <ContactForm />
+      </div>
     </div>
+  );
+}
+
+function ContactForm() {
+  const t = useTranslations('contactPage.form');
+  const toast = useToast();
+  const [sent, setSent] = useState(false);
+
+  const schema = z.object({
+    name: z.string().trim().min(2, t('nameShort')),
+    email: z.string().trim().email(t('emailInvalid')),
+    phone: z.string().trim().min(6, t('phoneShort')),
+    message: z.string().trim().min(5, t('messageShort')).max(4000),
+  });
+  type Values = z.infer<typeof schema>;
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<Values>({ resolver: zodResolver(schema) });
+
+  const onSubmit = async (v: Values) => {
+    try {
+      await api.post('/contact-messages', v);
+      setSent(true);
+      reset();
+      toast.success(t('success'));
+    } catch (e) {
+      toast.error(apiErrorMessage(e, t('error')));
+    }
+  };
+
+  if (sent) {
+    return (
+      <Card className="flex items-center gap-3 p-5 text-sm">
+        <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
+        <span>{t('success')}</span>
+      </Card>
+    );
+  }
+
+  const field =
+    'h-11 w-full rounded-md border border-border bg-surface px-3 text-sm outline-none transition-colors focus:border-accent';
+
+  return (
+    <Card className="p-5 sm:p-6">
+      <h2 className="text-lg font-semibold">{t('heading')}</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-4 grid gap-3 sm:grid-cols-2">
+        <label className="block">
+          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {t('name')}
+          </span>
+          <input className={field} {...register('name')} />
+          {errors.name && <span className="mt-1 block text-xs text-danger">{errors.name.message}</span>}
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {t('email')}
+          </span>
+          <input className={field} dir="ltr" type="email" {...register('email')} />
+          {errors.email && (
+            <span className="mt-1 block text-xs text-danger">{errors.email.message}</span>
+          )}
+        </label>
+        <label className="block sm:col-span-2">
+          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {t('phone')}
+          </span>
+          <input className={field} dir="ltr" {...register('phone')} />
+          {errors.phone && (
+            <span className="mt-1 block text-xs text-danger">{errors.phone.message}</span>
+          )}
+        </label>
+        <label className="block sm:col-span-2">
+          <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {t('message')}
+          </span>
+          <textarea
+            rows={5}
+            className="w-full resize-y rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none transition-colors focus:border-accent"
+            {...register('message')}
+          />
+          {errors.message && (
+            <span className="mt-1 block text-xs text-danger">{errors.message.message}</span>
+          )}
+        </label>
+        <div className="sm:col-span-2">
+          <Button type="submit" disabled={isSubmitting}>
+            <Send className="me-2 h-4 w-4" />
+            {isSubmitting ? t('sending') : t('send')}
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 }

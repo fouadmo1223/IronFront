@@ -482,6 +482,7 @@ function Location() {
   const title = pick(ar ? (cms.titleAr as string) : (cms.titleEn as string), t('title'));
   const { data: site } = useSiteContent();
   const schedule = resolveSchedule(site?.hours as Record<string, unknown> | undefined);
+  const mapUrl = pick((site?.contact as Record<string, unknown> | undefined)?.mapUrl as string);
   if (!enabled) return null;
   return (
     <section className="container grid gap-12 py-24 lg:grid-cols-2 lg:gap-16">
@@ -517,15 +518,17 @@ function Location() {
               );
             })}
           </div>
-          <a
-            href="https://maps.google.com/?q=Downtown+Cairo"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-editorial text-accent"
-          >
-            {t('directions')}
-            <ArrowRight className="h-4 w-4 rtl:rotate-180" />
-          </a>
+          {mapUrl && (
+            <a
+              href={mapUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-editorial text-accent"
+            >
+              {t('directions')}
+              <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+            </a>
+          )}
         </Reveal>
       </div>
       <RevealImage

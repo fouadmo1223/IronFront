@@ -258,7 +258,22 @@
     "hours": "Hours",
     "men": "Men",
     "women": "Women",
-    "closed": "Closed"
+    "closed": "Closed",
+    "form": {
+      "heading": "Send us a message",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message",
+      "send": "Send message",
+      "sending": "Sending…",
+      "success": "Thanks — we'll get back to you shortly.",
+      "error": "Could not send your message. Please try again.",
+      "nameShort": "Enter your name",
+      "emailInvalid": "Enter a valid email",
+      "phoneShort": "Enter a valid phone number",
+      "messageShort": "Write a few words"
+    }
   },
   "weekdays": {
     "sat": "Sat",
