@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useGSAP } from '@gsap/react';
-import { ArrowRight, Dumbbell, HeartPulse, Sparkles, Waves, Quote } from 'lucide-react';
+import { ArrowRight, Dumbbell, HeartPulse, Sparkles, Waves } from 'lucide-react';
 import { Link } from '@/i18n/routing';
-import { ensureGsap, prefersReducedMotion, refreshScrollTriggerWhenReady, EASE } from '@/lib/gsap';
+import { ensureGsap, refreshScrollTriggerWhenReady } from '@/lib/gsap';
 import { usePublicPlans } from '@/lib/portal-api';
 import {
   useSiteContent,
@@ -57,7 +56,6 @@ export function HomeExperience() {
       <GallerySection />
       <TrainingExperience />
       <Trainers />
-      <Testimonials />
       <Faq />
       <CtaBand />
       <Location />
@@ -408,75 +406,6 @@ function Trainers() {
           </figure>
         ))}
       </StaggerGroup>
-    </section>
-  );
-}
-
-/* ── 11 · Testimonials ── */
-function Testimonials() {
-  const t = useTranslations('home.testimonials');
-  const ar = useLocale() === 'ar';
-  const enabled = useSectionEnabled('home', 'TESTIMONIALS');
-  const c = useSectionData('home', 'TESTIMONIALS');
-  const cmsItems = Array.isArray(c.items) ? (c.items as Array<Record<string, string>>) : [];
-  const items: Array<{ quote: string; name: string }> = cmsItems.length
-    ? cmsItems.map((it) => ({
-        quote: ar ? it.quoteAr || it.quoteEn || '' : it.quoteEn || it.quoteAr || '',
-        name: it.nameEn || it.nameAr || '',
-      }))
-    : (t.raw('items') as Array<{ quote: string; name: string }>);
-  const [i, setI] = useState(0);
-  const quoteRef = useRef<HTMLQuoteElement>(null);
-
-  useEffect(() => {
-    const id = setInterval(() => setI((v) => (v + 1) % items.length), 6000);
-    return () => clearInterval(id);
-  }, [items.length]);
-
-  useGSAP(
-    () => {
-      const el = quoteRef.current;
-      if (!el || prefersReducedMotion()) return;
-      const { gsap } = ensureGsap();
-      gsap.fromTo(
-        el,
-        { autoAlpha: 0, y: 24 },
-        { autoAlpha: 1, y: 0, duration: 0.5, ease: EASE.out },
-      );
-    },
-    { dependencies: [i] },
-  );
-
-  if (!enabled) return null;
-
-  return (
-    <section className="border-y border-border/70 bg-surface">
-      <div className="container py-24">
-        <SectionIndex index="11" label={t('kicker')} />
-        <div className="relative mt-10 min-h-[220px]">
-          <Quote className="h-10 w-10 text-accent/40" />
-          <blockquote ref={quoteRef} className="mt-4">
-            <p className="font-display text-2xl font-medium leading-snug sm:text-4xl">
-              {items[i].quote}
-            </p>
-            <footer className="mt-6 text-xs font-semibold uppercase tracking-editorial text-muted-foreground">
-              {items[i].name}
-            </footer>
-          </blockquote>
-        </div>
-        <div className="mt-8 flex gap-2">
-          {items.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setI(idx)}
-              aria-label={`Testimonial ${idx + 1}`}
-              className={`h-1 rounded-full transition-all ${
-                idx === i ? 'w-10 bg-accent' : 'w-4 bg-border hover:bg-muted-foreground'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
