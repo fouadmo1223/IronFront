@@ -119,8 +119,11 @@ export function useSectionData(slug: string, type: string): Record<string, unkno
  */
 export function useSectionEnabled(slug: string, type: string): boolean {
   const { data } = useCmsPage(slug);
-  const section = data?.sections?.find((s) => s.type === type);
-  return section ? section.enabled !== false : true;
+  const matches = data?.sections?.filter((s) => s.type === type) ?? [];
+  // Not configured (or still loading) → visible. Otherwise visible if any
+  // section of this type is enabled — mirrors useSectionData, which resolves to
+  // the first enabled section of the type.
+  return matches.length === 0 || matches.some((s) => s.enabled !== false);
 }
 
 /** First non-empty string among the candidates. */

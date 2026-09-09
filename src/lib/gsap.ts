@@ -56,10 +56,18 @@ export function hasArabic(text: string) {
 }
 
 /**
- * Safety net for a reveal that never played. Only rescues elements that are
- * already in / above the viewport — a below-the-fold target is meant to stay
- * hidden until it is scrolled to, and force-showing it would make it re-animate
- * (flash) when its ScrollTrigger later fires.
+ * The single safety net for a reveal that never played — used by both `Reveal`
+ * and `StaggerGroup`. Two triggers:
+ *
+ *  - a time sweep at 2.4s / 5s for anything already in / above the viewport
+ *    (stale ScrollTrigger, throttled rAF on load);
+ *  - an IntersectionObserver for elements scrolled into view later and still
+ *    hidden — the guarantee that content is never permanently invisible.
+ *
+ * The rescue animates to the resolved state (and `clearProps` afterwards), so it
+ * also unwinds any `y` / `blur` / `clipPath` the never-run reveal left behind and
+ * still reads as an intentional entrance rather than a pop. Every timer it
+ * schedules is tracked and cleared on teardown.
  */
 export function armRevealFailsafe(
   nodes: ArrayLike<Element> | null | undefined,
@@ -67,37 +75,45 @@ export function armRevealFailsafe(
   const list = nodes ? Array.from(nodes) : [];
   if (!list.length) return () => {};
 
+  const done = new WeakSet<Element>();
   const show = (el: Element) => {
+    if (done.has(el)) return;
     const cs = getComputedStyle(el);
     if (cs.opacity !== '0' && cs.visibility !== 'hidden') return;
-    gsap.set(el, { autoAlpha: 1, clearProps: 'transform,filter,clipPath' });
+    done.add(el);
+    gsap.to(el, {
+      autoAlpha: 1,
+      x: 0,
+      y: 0,
+      filter: 'blur(0px)',
+      clipPath: 'inset(0 0 0 0)',
+      duration: 0.5,
+      ease: 'power2.out',
+      clearProps: 'transform,filter,clipPath',
+    });
   };
 
-  // Time-based net: rescue anything already in / above the viewport that the
-  // scroll reveal never played (stale ScrollTrigger, throttled rAF, etc.).
+  const timers: number[] = [];
+
   const rescue = () => {
     for (const el of list) {
       if (el.getBoundingClientRect().top > window.innerHeight * 0.95) continue;
       show(el);
     }
   };
-  const timers = [2400, 5000].map((ms) => window.setTimeout(rescue, ms));
+  timers.push(window.setTimeout(rescue, 2400), window.setTimeout(rescue, 5000));
 
-  // Visibility-based net: if an element is actually scrolled into view and is
-  // still hidden a beat later, the reveal is broken — just show it. This is the
-  // guarantee that content is never permanently invisible.
   let io: IntersectionObserver | null = null;
   if (typeof IntersectionObserver !== 'undefined') {
     io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (!e.isIntersecting) continue;
-          const el = e.target;
-          window.setTimeout(() => show(el), 900);
-          io?.unobserve(el);
+          io?.unobserve(e.target);
+          timers.push(window.setTimeout(() => show(e.target), 900));
         }
       },
-      { rootMargin: '0px 0px -8% 0px' },
+      { rootMargin: '0px 0px -12% 0px' },
     );
     list.forEach((el) => io?.observe(el));
   }

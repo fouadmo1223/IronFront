@@ -1,72 +1,9 @@
 'use client';
 
-import { Children, useEffect, useRef, type ReactNode } from 'react';
+import { Children, useRef, type ReactNode } from 'react';
 import { useGSAP } from '@gsap/react';
 import { ensureGsap, prefersReducedMotion, armRevealFailsafe, EASE, DUR, START } from '@/lib/gsap';
 import { cn } from '@/lib/utils';
-
-/**
- * Last line of defence, entirely outside GSAP. If a `[data-stagger-item]` is
- * scrolled into view and still visually hidden, show it. This survives the
- * `useGSAP` context being reverted (async data → key remount churn), which was
- * stripping the reveal and leaving items stuck at the CSS `opacity: 0`.
- */
-function useHardRevealGuard(ref: React.RefObject<HTMLElement>, selector: string) {
-  useEffect(() => {
-    const root = ref.current;
-    if (!root || typeof IntersectionObserver === 'undefined') return;
-
-    const show = (el: Element, i = 0) => {
-      const h = el as HTMLElement;
-      const cs = getComputedStyle(h);
-      if (cs.opacity !== '0' && cs.visibility !== 'hidden') return;
-      // Animate the rescue so a GSAP miss still reads as an intentional reveal.
-      h.style.transition = 'opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1)';
-      h.style.transitionDelay = `${Math.min(i, 8) * 0.07}s`;
-      h.style.transform = 'translateY(24px)';
-      h.style.visibility = 'visible';
-      requestAnimationFrame(() => {
-        h.style.opacity = '1';
-        h.style.transform = 'translateY(0)';
-      });
-      window.setTimeout(() => {
-        h.style.transition = '';
-        h.style.transitionDelay = '';
-        h.style.transform = '';
-      }, 1400);
-    };
-    const targets = () => {
-      const marked = root.querySelectorAll(selector);
-      return marked.length ? Array.from(marked) : Array.from(root.children);
-    };
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        const hit = entries.filter((e) => e.isIntersecting).map((e) => e.target);
-        if (!hit.length) return;
-        const list = targets();
-        window.setTimeout(() => hit.forEach((el) => show(el, list.indexOf(el))), 1100);
-        hit.forEach((el) => io.unobserve(el));
-      },
-      { rootMargin: '0px 0px -15% 0px' },
-    );
-    targets().forEach((el) => io.observe(el));
-
-    // Also a plain time sweep for anything already on screen at mount.
-    const sweep = () => {
-      const list = targets();
-      list.forEach((el, i) => {
-        if (el.getBoundingClientRect().top < window.innerHeight) show(el, i);
-      });
-    };
-    const t = window.setTimeout(sweep, 3000);
-
-    return () => {
-      io.disconnect();
-      window.clearTimeout(t);
-    };
-  });
-}
 
 type Dir = 'up' | 'down' | 'left' | 'right' | 'none';
 
@@ -207,8 +144,6 @@ export function StaggerGroup({
     },
     { scope: ref, dependencies: [amount, dir, distance, start, count] },
   );
-
-  useHardRevealGuard(ref, '[data-stagger-item]');
 
   return (
     <div ref={ref} data-animate-group className={className}>
