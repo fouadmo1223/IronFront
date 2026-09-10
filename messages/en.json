@@ -3,6 +3,7 @@
     "emailExists": "An account with this email already exists.",
     "invalidCredentials": "Incorrect email or password.",
     "accountDisabled": "This account is disabled. Contact the gym.",
+    "banned": "Your account has been banned. Please contact the gym for details.",
     "accountNotFound": "Account not found.",
     "phoneExists": "This phone number is already in use.",
     "registrationFailed": "Could not create your account. Please try again.",

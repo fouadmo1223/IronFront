@@ -98,6 +98,7 @@ export function apiErrorMessage(error: unknown, fallback = 'Something went wrong
 const API_ERROR_PATTERNS: Array<[RegExp, string]> = [
   [/account with this email already exists/i, 'emailExists'],
   [/invalid email or password/i, 'invalidCredentials'],
+  [/account has been banned|your account has been banned|banned from/i, 'banned'],
   [/account is disabled/i, 'accountDisabled'],
   [/account not found/i, 'accountNotFound'],
   [/(phone).*(already|exists|taken)|duplicate value for .*phone/i, 'phoneExists'],
